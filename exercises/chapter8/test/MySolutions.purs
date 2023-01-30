@@ -1,19 +1,25 @@
 module Test.MySolutions
   ( filterM
   , possibleSums
-  , readTextFile
+  , simulate
   )
   where
 
 import Data.List
 import Prelude
 
+import Control.Monad.Error.Class (try)
+import Control.Monad.RWS (modify)
+import Control.Monad.ST (ST, for)
+import Control.Monad.ST.Internal (new, read)
 import Data.Array as A
+import Data.Either (Either(..))
 import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Class.Console (log, logShow)
 import Effect.Random (random)
 import Node.Encoding (Encoding(..))
+import Node.FS.Async (readTextFile)
 
 -- Note to reader: Add your solutions to this file
 
@@ -44,3 +50,11 @@ readTextFile2 = do
     case result of
         Right lines -> log $ lines
         Left err -> log err
+
+simulate :: forall r. Number -> Number -> Int -> ST r Number
+simulate x0 v0 time = do
+    ref <- new { x: x0, v: v0 }
+    for 0 (time * 1000) \_ ->
+        modify (\o -> {v: o.v - 9.81 * 0.001, x: o.x + o.v * 0.001 }) ref
+    final <- read ref
+    pure final.x
