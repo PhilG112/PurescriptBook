@@ -28,6 +28,8 @@ You can edit this file as you like.
   , "web-dom"
   , "web-html"
   , "node-fs"
+  , "node-buffer"
+  , "transformers"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

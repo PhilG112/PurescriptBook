@@ -1,7 +1,6 @@
 module Test.MySolutions
   ( filterM
   , possibleSums
-  , simulate
   )
   where
 
@@ -44,17 +43,17 @@ numberGen = do
     n <- random
     logShow n
 
-readTextFile2 :: Effect Unit
-readTextFile2 = do
-    result <- try $ readTextFile UTF8 "OMG.md"
-    case result of
-        Right lines -> log $ lines
-        Left err -> log err
+-- readTextFile2 :: Effect Unit
+-- readTextFile2 = do
+--     result <- try $ readTextFile UTF8 "OMG.md"
+--     case result of
+--         Right lines -> log $ lines
+--         Left err -> log err
 
-simulate :: forall r. Number -> Number -> Int -> ST r Number
-simulate x0 v0 time = do
-    ref <- new { x: x0, v: v0 }
-    for 0 (time * 1000) \_ ->
-        modify (\o -> {v: o.v - 9.81 * 0.001, x: o.x + o.v * 0.001 }) ref
-    final <- read ref
-    pure final.x
+-- simulate :: forall r. Number -> Number -> Int -> ST r Number
+-- simulate x0 v0 time = do
+--     ref <- new { x: x0, v: v0 }
+--     for 0 (time * 1000) \_ ->
+--         modify (\o -> {v: o.v - 9.81 * 0.001, x: o.x + o.v * 0.001 }) ref
+--     final <- read ref
+--     pure final.x

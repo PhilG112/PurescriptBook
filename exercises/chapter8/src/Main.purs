@@ -8,6 +8,7 @@ import Data.Array (mapWithIndex, updateAt)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Tuple (Tuple(..))
+import Data.Tuple.Nested ((/\))
 import Effect (Effect)
 import Effect.Console (log)
 import Effect.Exception (throw)
@@ -70,12 +71,12 @@ formField name placeholder value setValue =
 
 mkAddressBookApp :: Effect (ReactComponent {})
 mkAddressBookApp =
-  -- incoming \props are unused
   reactComponent "AddressBookApp" \props -> R.do
+
     -- `useState` takes a default initial value and returns the
     -- current value and a way to update the value.
     -- Consult react-hooks docs for a more detailed explanation of `useState`.
-    Tuple person setPerson <- useState examplePerson
+    person /\ setPerson <- useState examplePerson
     let
       errors = case validatePerson' person of
         Left  e -> e
@@ -126,13 +127,18 @@ mkAddressBookApp =
                   ]
           }
 
+mkAddressBookApp2 :: Effect (ReactComponent {})
+mkAddressBookApp2 =
+  reactComponent
+    "AddressBookApp"
+    (\props -> pure $ D.text "Hi! I'm an address book")
+
 main :: Effect Unit
 main = do
   log "Rendering address book component"
   -- Get window object
-  w <- window
   -- Get window's HTML document
-  doc <- document w
+  doc <- document =<< window
   -- Get "container" element in HTML
   ctr <- getElementById "container" $ toNonElementParentNode doc
   case ctr of
